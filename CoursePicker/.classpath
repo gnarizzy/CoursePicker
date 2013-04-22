@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="C:/Users/Tyler/Downloads/javax.servlet.jsp.jstl-1.2.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Tyler/Downloads/javax.servlet.jsp.jstl-api-1.2.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v7.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
