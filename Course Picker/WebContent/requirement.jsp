@@ -81,7 +81,7 @@
 				</tr>
 			</c:forEach>
 			<tr>
-				<th colspan="8">Course Listing is up-to-date as of 2013/04/09
+				<th colspan="10">Course Listings are updated daily at 7:35 AM
 					16:19</th>
 			</tr>
 		</table>
