@@ -6,10 +6,10 @@
 <title>Weekly Class Schedule</title>
 
 <script type="text/javascript">
-  var TOP_MARGIN = 100;
+	var TOP_MARGIN = 100;
 	var LEFT_MARGIN = 100;
 	var RIGHT_MARGIN = 900;
-	var BOTTOM_MARGIN = 880;
+	var BOTTOM_MARGIN = 940;
 	
 	var PIXELS_PER_DAY = 160;
 	var PIXELS_PER_HOUR = 60;
@@ -106,10 +106,11 @@
 		ctx.fillText("7:00 p", 25, TOP_MARGIN + 10 + 660);
 		ctx.fillText("8:00 p", 25, TOP_MARGIN + 10 + 720);
 		ctx.fillText("9:00 p", 25, TOP_MARGIN + 10 + 780);
+		ctx.fillText("10:00 p", 25, TOP_MARGIN + 10 + 840);
 		
 		
 		//Go
-		for(var i = 1; i < 13; i++){
+		for(var i = 1; i < 14; i++){
 			ctx.moveTo(LEFT_MARGIN, TOP_MARGIN + i*PIXELS_PER_HOUR);
 			ctx.lineTo(RIGHT_MARGIN, TOP_MARGIN+ i*PIXELS_PER_HOUR);
 		}
