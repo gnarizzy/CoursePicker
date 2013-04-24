@@ -20,21 +20,78 @@ import java.util.ArrayList;
 public class Schedule {
 
 	ArrayList<ScheduleCourse> schedule;
-
+	int[] mOccupiedMinutes;
+	int[] tOccupiedMinutes;
+	int[] wOccupiedMinutes;
+	int[] thOccupiedMinutes;
+	int[] fOccupiedMinutes;
 	/**
-	 * Constructor that instantiates the schedule arraylist
+	 * Constructor that instantiates the schedule arraylist and the internal array for checking conflicts
 	 */
 	public Schedule() {
 		schedule = new ArrayList<ScheduleCourse>();
+		mOccupiedMinutes= new int[1440];
+		tOccupiedMinutes= new int[1440];
+		wOccupiedMinutes= new int[1440];
+		thOccupiedMinutes= new int[1440];
+		fOccupiedMinutes= new int[1440];
 	}
 
 	/**
 	 * Adds a course to the schedule, unless there is a conflict
 	 * 
-	 * @throws ScheduleException
+	 * @throws ScheduleException 
 	 */
-	public void addCourse() throws ScheduleException {
-
+	public void addCourse(Course newCourse) throws ScheduleException {
+		String monday = newCourse.getMonday();
+		String tuesday = newCourse.getTuesday();
+		String wednesday = newCourse.getWednesday();
+		String thursday = newCourse.getThursday();
+		String friday = newCourse.getFriday();
+		String[] classTimes={monday,tuesday,wednesday,thursday,friday};
+		String[] days={"Monday","Tuesday","Wednesday","Thursday","Friday"};
+		int counter=0;
+		for (String classTime :classTimes){ //checks for conflict on current day
+			int[] times=parseString(classTime);
+			if (isConflicting(times, days[counter]))
+				throw new ScheduleException("Conflict on "+ days[counter]);
+			counter++;
+		}
+		for (int j=0;j<classTimes.length;j++){ //Adds course times to internal representation to check for future conflicts
+			int[] times=parseString(classTimes[j]);
+			if (times.length==1)//class doesn't meet that day
+				continue;
+			for (int i=0;i<times.length;i++)
+			{
+				if(i%2==1)//an end time
+				{
+					if (j==0){
+						for (int k=times[i-1];k<=times[i];k++)
+							mOccupiedMinutes[k]=1; //flips the index of minutes occupied by class from 0 to 1		
+					}
+					else if (j==1) {
+						for (int k=times[i-1];k<=times[i];k++)
+							tOccupiedMinutes[k]=1;
+					}
+					else if (j==2) {
+						for (int k=times[i-1];k<=times[i];k++)
+							wOccupiedMinutes[k]=1;
+					}
+					else if (j==3) {
+						for (int k=times[i-1];k<=times[i];k++)
+							thOccupiedMinutes[k]=1;
+					}
+					else if (j==4) {
+						for (int k=times[i-1];k<=times[i];k++)
+							fOccupiedMinutes[k]=1;
+					}
+				}
+					
+			}
+		}
+		
+		schedule.add(new ScheduleCourse(newCourse.getCallNumber(),newCourse.getDepartment(),newCourse.getCourseNumber(), parseString(monday), parseString(tuesday), parseString(wednesday),parseString(thursday), parseString(friday)));
+		
 	}
 
 	/**
@@ -44,7 +101,14 @@ public class Schedule {
 	 *            The call number of the course to delete
 	 */
 	public void deleteCourse(String callNumber) {
-
+		for (ScheduleCourse course : schedule){ //checks if a course in the schedule is the course to be deleted. If so, it is deleted. 
+			if(callNumber.equals(course.getCallNumber())) {
+				schedule.remove(course);
+				break;} //break statement required to avoid concurrentmodificationexception!
+			
+			//TODO- remove class from internal array representation to avoid incorrect conflicts!
+		}
+		
 	}
 
 	/**
@@ -58,11 +122,15 @@ public class Schedule {
 
 	/**
 	 * 
-	 * @param input
+	 * @param input The input class meeting time
 	 * @return array of integers representing start and end times, in minutes
 	 */
 	public int[] parseString(String input) {
-		
+		if (input.length()==0) //empty string, meaning class does not meet that day
+		{
+			int[] empty={0};
+			return empty;
+		}
 		if (input.length() <= 13) // class only meets one time per day, since
 									// string is <= 13 characters long
 		{
@@ -154,7 +222,37 @@ public class Schedule {
 	 * 
 	 * @return
 	 */
-	public boolean isConflicting() {
-		return true;
+	private boolean isConflicting(int[] times, String day) {
+		for (int i=0;i<times.length;i++)
+			if (i%2==1)//end time
+				for (int j=times[i-1];j<=times[i];j++){
+					if (day.equals("Monday")) {
+						if (mOccupiedMinutes[j]==1)
+							return true; 
+					}
+					if (day.equals("Tuesday")) {
+						if (tOccupiedMinutes[j]==1)
+							return true; 
+					}
+					if (day.equals("Wednesday")) {
+						if (wOccupiedMinutes[j]==1)
+							return true; 
+					}
+					if (day.equals("Thursday")) {
+						if (thOccupiedMinutes[j]==1)
+							return true; 
+					}
+					if (day.equals("Friday")) {
+						if (fOccupiedMinutes[j]==1)
+							return true; 
+					}
+					
+						
+				}
+					
+					
+					
+					
+		return false;
 	}
 }
