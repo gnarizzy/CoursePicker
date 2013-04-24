@@ -1,6 +1,9 @@
 package servlet;
 import helper.Course;
 import helper.CourseHelper;
+import helper.Schedule;
+import helper.ScheduleCourse;
+import helper.ScheduleException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,13 +22,13 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/CourseController")
 public class CourseController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public CourseController() {
-        super();
-    }
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public CourseController() {
+		super();
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -35,32 +38,32 @@ public class CourseController extends HttpServlet {
 		String name =request.getParameter("name");
 		String major = request.getParameter("major");
 		String email = request.getParameter("email");
-		
-		
+
+
 		String url = "/index.jsp";
-		
+
 		if(name.length() != 0 && major.length() != 0 && email.length() != 0) {
 			url = "/home.jsp";		
 		}
-		
-		
+
+
 
 		if(request.getParameter("View Schedule") != null) {
 			url = "/schedule.jsp";
-		
+
 		}
-		
+
 		request.setAttribute("name", name);
 		request.setAttribute("major", major);
 		request.setAttribute("email", email);
-		
-		
-		ServletContext sc = getServletContext();
-	    RequestDispatcher rd = sc.getRequestDispatcher(url);
 
-	    rd.forward(request, response);
-		
-		
+
+		ServletContext sc = getServletContext();
+		RequestDispatcher rd = sc.getRequestDispatcher(url);
+
+		rd.forward(request, response);
+
+
 	}
 
 
@@ -69,51 +72,60 @@ public class CourseController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+
 		if(request.getParameter("callNumber") != null){
 			//WHEN YOU ADD COURSE IT WILL COME HERE THIS IS WHERE WE IMPLEMENT THE SCHEDULE.JAVA CLASS
 			//request.getParameter("callNumber");
 			//PASS c to Schedule.java
-			
+
 			CourseHelper ch = new CourseHelper();
 			Course c = ch.getCourseForSchedule(request.getParameter("callNumber"));
-			
-			
+			Schedule sched = new Schedule();
+			try {
+				sched.addCourse(c);
+			} catch (ScheduleException e) {
+				e.printStackTrace();
+			}
+
+			ArrayList<ScheduleCourse> arrayOfSchedule = sched.getSchedule();
+
+			request.setAttribute("schedule", arrayOfSchedule);
+
 			ServletContext sc = getServletContext();
-		    RequestDispatcher rd = sc.getRequestDispatcher("/schedule.jsp");
-		    rd.forward(request, response);
-		    return;
+			RequestDispatcher rd = sc.getRequestDispatcher("/schedule.jsp");
+			rd.forward(request, response);
+			return;
 		}
-		
-				if(request.getParameter("reqID") != ""){
-					ServletContext sc = getServletContext();
-				    RequestDispatcher rd = sc.getRequestDispatcher("/requirement.jsp");
-				    
-				    ArrayList<Course> a = new ArrayList<Course>();
-				    CourseHelper cH = new CourseHelper();
-				    
-				    int id = Integer.parseInt(request.getParameter("reqID"));
-				    
-				    System.out.println(id);
-				    System.out.println(id);
-				    System.out.println(id);
-				    System.out.println(id);
-				    
-				    a = cH.getCourseWithRequirementList(id);
-				    
-				    request.setAttribute("list", a);
 
-				    rd.forward(request, response);
-				    return;
-				}
+		if(request.getParameter("reqID") != ""){
+			ServletContext sc = getServletContext();
+			RequestDispatcher rd = sc.getRequestDispatcher("/requirement.jsp");
 
-				else{
-					ServletContext sc = getServletContext();
-				    RequestDispatcher rd = sc.getRequestDispatcher("/home.jsp");
-				    
-				    rd.forward(request, response);
-				    return;
-				}
+			ArrayList<Course> a = new ArrayList<Course>();
+			CourseHelper cH = new CourseHelper();
+
+			int id = Integer.parseInt(request.getParameter("reqID"));
+
+			System.out.println(id);
+			System.out.println(id);
+			System.out.println(id);
+			System.out.println(id);
+
+			a = cH.getCourseWithRequirementList(id);
+
+			request.setAttribute("list", a);
+
+			rd.forward(request, response);
+			return;
+		}
+
+		else{
+			ServletContext sc = getServletContext();
+			RequestDispatcher rd = sc.getRequestDispatcher("/home.jsp");
+
+			rd.forward(request, response);
+			return;
+		}
 	}
 
 }
