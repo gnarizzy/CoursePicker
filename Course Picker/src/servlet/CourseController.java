@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/CourseController")
 public class CourseController extends HttpServlet {
+	private Schedule sched;
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -38,7 +39,7 @@ public class CourseController extends HttpServlet {
 		String name =request.getParameter("name");
 		String major = request.getParameter("major");
 		String email = request.getParameter("email");
-
+		sched = new Schedule();
 
 		String url = "/index.jsp";
 
@@ -62,8 +63,6 @@ public class CourseController extends HttpServlet {
 		RequestDispatcher rd = sc.getRequestDispatcher(url);
 
 		rd.forward(request, response);
-
-
 	}
 
 
@@ -80,7 +79,6 @@ public class CourseController extends HttpServlet {
 
 			CourseHelper ch = new CourseHelper();
 			Course c = ch.getCourseForSchedule(request.getParameter("callNumber"));
-			Schedule sched = new Schedule();
 			try {
 				sched.addCourse(c);
 			} catch (ScheduleException e) {
