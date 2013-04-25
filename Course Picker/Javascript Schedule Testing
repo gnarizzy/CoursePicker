@@ -53,15 +53,15 @@
 	 *Pass in as drawClassMeeting(name, start, end)
 	 */
 	 
-	 function drawClassMeeting(var1, var2, var3) {
+	 function drawClassMeeting(var1, var2, var3, var4) {
 		
 		var c=document.getElementById("myCanvas");
 		var ctx=c.getContext("2d");
 		
 		
 		var top = var2 * PIXELS_PER_HOUR + TOP_MARGIN;
-		var bottom = var3 * PIXELS_PER_HOUR + TOP_MARGIN;
-		var left = 3 * PIXELS_PER_DAY + LEFT_MARGIN;
+		var bottom = (var3-var2)* PIXELS_PER_HOUR;
+		var left = var4 * PIXELS_PER_DAY + LEFT_MARGIN;
 		
 		
 		
@@ -76,7 +76,7 @@
 		
 		
 		ctx.beginPath();
-	    ctx.rect(left, top, PIXELS_PER_DAY, PIXELS_PER_HOUR);
+	    ctx.rect(left, top, PIXELS_PER_DAY, bottom);
 	    ctx.fillStyle = radialGrad;
 	    ctx.fill();
 	    ctx.lineWidth = 3;
@@ -242,7 +242,9 @@
 			ctx.lineTo(RIGHT_MARGIN, TOP_MARGIN+ i*PIXELS_PER_HOUR);
 		}
 		ctx.stroke();	
-				
+		
+		
+		
 	}
 	
 	
@@ -254,7 +256,8 @@
 	
 </script>
 </head>
-<body onload="initializeCanvas(); drawClassMeeting('CSCI 4300', 7.5, 8.5); drawClassMeeting('CSCI 1730', 1, 3); drawClassMeeting('CSCI 2720', 12, 13); drawClassMeeting('CSCI 4900', 13, 14);">
+<body onload="initializeCanvas(); drawClassMeeting('CSCI 4300', 1.5, 2.75, 1); drawClassMeeting('CSCI 4300', 1.5, 2.75, 3); drawClassMeeting('CSCI 1730', 4, 5, 0); drawClassMeeting('CSCI 1730', 4, 5, 2); drawClassMeeting('CSCI 1730', 4, 5, 4); drawClassMeeting('CSCI 4900', 7, 8.5, 1); drawClassMeeting('CSCI 4900', 7, 8.5, 3); drawClassMeeting('CSCI 2720', 11, 13, 4); 
+">
 	<canvas id="myCanvas" width="1000" height="1000"
 		style="border: 1px solid #000000;">
 	</canvas>
