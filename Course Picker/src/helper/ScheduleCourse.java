@@ -30,6 +30,24 @@ public class ScheduleCourse {
 		
 		
 	}
+	public String getCourseNumber() {
+		return courseNumber;
+	}
+	public int[] getmTimes() {
+		return mTimes;
+	}
+	public int[] gettTimes() {
+		return tTimes;
+	}
+	public int[] getwTimes() {
+		return wTimes;
+	}
+	public int[] getThTimes() {
+		return thTimes;
+	}
+	public int[] getfTimes() {
+		return fTimes;
+	}
 	/**
 	 * Takes the course times and formats them into the desired format for display on schedule.jsp
 	 */

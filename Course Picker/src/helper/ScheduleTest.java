@@ -36,6 +36,7 @@ public class ScheduleTest {
 	public void testDeleteCourse() {
 		Course course1= new Course("2","123","MIST","1312", "01:15P-02:30P","", "01:15P-02:30P","","03:20P-3:40P");
 		Course course2= new Course("4","152","PHIL","2000H", "02:31P-02:45P","", "03:15P-03:30P","","03:45P-3:50P");
+		Course course3= new Course("6", "171", "MATH", "3200", "", "01:30P-02:45P","","01:30P-2:45P","");
 		Schedule schedule= new Schedule();
 		try {
 			schedule.addCourse(course1);
@@ -48,8 +49,26 @@ public class ScheduleTest {
 		assertEquals("After fake delete", 2, schedule.getSchedule().size());
 		schedule.deleteCourse("123");
 		assertEquals("Delete first course", 1, schedule.getSchedule().size());
-		schedule.deleteCourse("152");
-		assertEquals("Delete second course", 0, schedule.getSchedule().size());
+	    schedule.deleteCourse("152");
+	    assertEquals("Delete second course", 0, schedule.getSchedule().size());
+		try {
+			schedule.addCourse(course2); //since course2 has been deleted, this shouldn't throw an exception
+		} catch (ScheduleException e) {
+			e.printStackTrace();
+		}
+		assertEquals("Re-add second course", 1, schedule.getSchedule().size()); //test makes sure that course2 was completely deleted the first time, so adding it back wouldn't cause a conflict
+		try {
+			schedule.addCourse(course3);
+		} catch (ScheduleException e) {
+			e.printStackTrace();
+		}
+		schedule.deleteCourse("171");
+		try {
+			schedule.addCourse(course3);
+		} catch (ScheduleException e) {
+			e.printStackTrace();
+		}
+		assertEquals("After re-adding third course", 2, schedule.getSchedule().size());
 		
 	}
 	@Test
@@ -64,13 +83,12 @@ public class ScheduleTest {
 			schedule.addCourse(course1);
 			schedule.addCourse(course2);
 		} catch (ScheduleException e) {
-	
 		}
 		ArrayList<ScheduleCourse> courses=schedule.getSchedule();
 		 
 		assertEquals("course1 start",5.25, courses.get(0).getMonday()[0],.001);
 		assertEquals("course1 end",6.5, courses.get(0).getMonday()[1],.001);
-		assertEquals("course2 start",6.5166, courses.get(1).getMonday()[0],.001);
+		assertEquals("course1 end",6.5166, courses.get(1).getMonday()[0],.001);
 		assertEquals("course2 end",6.75, courses.get(1).getMonday()[1],.001);
 		assertEquals("course1 call number","123", courses.get(0).getCallNumber());
 		assertEquals("course2 call number","152", courses.get(1).getCallNumber());
@@ -93,8 +111,7 @@ public class ScheduleTest {
 		schedule.addCourse(course2);
 		}
 		catch (Exception e){
-			System.out.println("This better print!");
-			System.out.println(e.getMessage());
+			
 		}
 		assertEquals("Course conflict 1",1,schedule.getSchedule().size());
 		try {
