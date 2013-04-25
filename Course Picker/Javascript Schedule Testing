@@ -92,6 +92,88 @@
 	}
 	
 	
+
+	
+	
+	//Takes in the arraylist, loops over it and calls drawItem for each schedule.java object.
+	function drawSchedule(var1) {
+		
+		var c=document.getElementById("myCanvas");
+		var ctx=c.getContext("2d");
+		var schedule = var1;
+		
+		
+		//Loop through every schedule.java object in the array till it's empty
+		while(schedule.pop() != false) {
+		
+			var meeting = schedule.pop();
+			
+			//Returns an array of doubles, even positions are start time and odd positions are end time
+			var monday = meeting.getMonday();
+			var tuesday = meeting.getTuesday();
+			var wednesday = meeting.getWednesday();
+			var thursday = meeting.getThursday();
+			var friday = meeting.getFirday();
+			var i=0;
+			var className = "CLASSNAME";
+			var start;
+			var end;
+			var top;
+			var bottom;
+			var left;
+			var day;
+			
+			//Loop through the array of MONDAY meeting times for this class
+			while(monday[i] != null) {
+				day = 0;
+				//className = meeting.getClassName <---NEED TO CHECK THIS WITH GAUTAM
+				
+				
+				//Its an even number, meaning a start time. We then know the next is the end time.
+				if(i%2 == 0) {
+					start = monday[i];
+					end = monday[i+1];
+				
+				
+					//Start and end times for the class have been found. Time to draw
+					
+					//Top boundary is (start time * the pixels per hour) + top margin
+					top = (start*PIXELS_PER_HOUR) + TOP_MARGIN;
+					//Bottom boundary for the meeting is (end time * pixels per hour) + top margin
+					bottom = (end*PIXELS_PER_HOUR) + TOP_MARGIN;
+					//Distance left is (day of meeting * the pixels per day) + left margin
+					left = day * PIXELS_PER_DAY + LEFT_MARGIN;
+			
+					
+					//Set up gradient background
+					var radialGrad = ctx.createRadialGradient(left, top+30, 15, left+20, top, 100);
+					radialGrad.addColorStop(0.0,"white");
+					radialGrad.addColorStop(1,"red");
+					
+					ctx.beginPath();
+				    ctx.rect(left, top, PIXELS_PER_DAY, bottom);
+				    ctx.fillStyle = radialGrad;
+				    ctx.fill();
+				    ctx.lineWidth = 3;
+				    ctx.strokeStyle = 'black';
+				    ctx.stroke();
+					
+					
+					
+					ctx.fillStyle="#000000";
+					ctx.fillText(className, left+ 5, top + 35);
+				} //<---End Monday
+				
+				i++;
+			}
+					
+		}
+		
+		
+	}
+	
+	
+	
 	
 	/*
 	 * Initialize the canvas with grid lines and labels
